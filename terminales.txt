@@ -1,2 +1,4 @@
-RET Terminal_de_Retiro Argentina 35 4 12 46
-COR Terminal_de_Cordoba Argentina 14 9 87 69
+COR Terminal de Cordoba 34 12 2 3
+MEN Terminal de Mendoza 231.2 4 2 6
+MOR Terminal del Oeste 1234.2 3 2 6
+
