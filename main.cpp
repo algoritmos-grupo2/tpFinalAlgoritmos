@@ -7,32 +7,10 @@
 
 using namespace std;
 
-/*Terminales de ómnibus
-La información de las terminales estará dada en un archivo de texto terminales.txt que deberá
-leerse al iniciar la aplicación.
-En cada línea del archivo estará la información de la terminal, separada por espacios:
-codigo nombre ciudad pais superficie #cantidad_terminales #destinos_nacionales
-#destinos_internacionales
-El código son tres letras que identifica a cada terminal. Por ejemplo, RET es la terminal de
-Retiro, COR es la teminal de Córdoba capital.
-La superficie es un número flotante que indica los km2. Los últimos tres datos son números
-enteros con las cantidades correspondientes.
-Ejemplo:
-RET Terminal de Retiro Argentina 34.75 4 12 46
-COR Terminal de Córdoba Argentina 14 9 87 69
-Se debe mostrar un menú en el cual se pueda:
-- consultar por una terminal en particular
-- dar de alta una nueva terminal
-- dar de baja a alguna
-- mostrar todas las terminales (ordenados por los distintos datos)
-Consideraciones
-- El archivo está bien formado.
-- La implementación debe utilizar una tabla de hashing.
-- La función de hashing a utilizar debe lograr una buena dispersión.
-*/
-
 void mostrarDatos();
 void opciones();
+void agregarTerminal();
+void quitarTerminal();
 int numero;
 int main() {
     opciones();
@@ -40,26 +18,26 @@ int main() {
 
 }
 
-void mostrarDatos(){
+void mostrarDatos(){ //Funcion para mostrar los datos del archivo
     string line;
-    vector<string> lines;
-    ifstream myfile ("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::in);
-    if (myfile.is_open()){
-        while(getline(myfile,line)){
-            lines.push_back(line);
+    vector<string> lines; //Vector para guardar los datos del archivo
+    ifstream myfile ("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::in); //Se abre el archivo en modo lectura
+    if (myfile.is_open()){ //Si el archivo se abre
+        while(getline(myfile,line)){ //y se pueda leer una linea
+            lines.push_back(line); //Se guarda en el vector
         }
-        myfile.close();
+        myfile.close(); //al salir del ciclo se cierra el archivo
     }
     else cout<<"No se puede abrir el archivo";
 
-    for(int i=0; i<lines.size(); ++i){
+    for(int i=0; i<lines.size(); ++i){ //Se recorre el vector para mostrar los datos
         cout<<lines[i]<<'\n';
     }
 }
 
 void agregarTerminal(){
     ofstream myfile;
-    myfile.open("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::app);
+    myfile.open("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::app); //Se abre el archivo en modo append
     string codigo, nombre, ciudad, pais;
     float superficie;
     int cantidadTerminales, destinosNacionales, destinosInternacionales;
@@ -79,18 +57,45 @@ void agregarTerminal(){
     cin>>destinosNacionales;
     cout<<"Ingrese la cantidad de destinos internacionales de la terminal: ";
     cin>>destinosInternacionales;
-    myfile<<codigo<<" "<<nombre<<" "<<ciudad<<" "<<pais<<" "<<superficie<<" "<<cantidadTerminales<<" "<<destinosNacionales<<" "<<destinosInternacionales<<endl;
-    myfile.close();
+    myfile<<codigo<<" "<<nombre<<" "<<ciudad<<" "<<pais<<" "<<superficie<<" "<<cantidadTerminales<<" "<<destinosNacionales<<" "<<destinosInternacionales<<endl; //Se escribe en el archivo
+    myfile.close(); //Se cierra el archivo
+}
+
+void quitarTerminal(){
+    string line;
+    vector<string> lines; //Se crea un vector para guardar los datos del archivo
+    ifstream myfile ("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::in);  //Se abre el archivo en modo lectura
+    if (myfile.is_open()){ //Si el archivo se abre
+        while(getline(myfile,line)){ //y se pueda leer una linea
+            lines.push_back(line); //Se guarda en el vector
+        }
+        myfile.close();
+    }
+    else cout<<"No se puede abrir el archivo";
+
+    for(int i=0; i<lines.size(); ++i){ //Se recorre el vector para mostrar los datos
+        cout<<i+1<<") "<<lines[i]<<'\n'; //Se muestra el numero de la linea y los datos
+    }
+    cout<<"Ingrese el numero de la terminal que desea eliminar: "; //Se pide el numero de la linea que se desea eliminar
+    cin>>numero;
+    lines.erase(lines.begin()+numero-1); //Se elimina la linea del vector
+    ofstream myfile2; //Se crea un archivo nuevo
+    myfile2.open("c:/users/joel/documents/github/algoritmos/tpfinalalgoritmos/terminales.txt", ios::out); //Se abre el archivo nuevo en modo escritura
+    for(int i=0; i<lines.size(); ++i){ //Se recorre el vector para escribir los datos en el archivo nuevo
+        myfile2<<lines[i]<<endl;
+    }
+    myfile2.close(); //Se cierra el archivo nuevo
 }
 
 void opciones(){
     cout << "\n\nMenu de Opciones" << endl;
     cout << "1. Mostrar todas las terminales" << endl;
     cout << "2. Agregar una terminal" << endl;
-    cout << "3. Salir" << endl;
+    cout << "3. Eliminar una terminal" << endl;
+    cout << "4. Salir" << endl;
 
 
-    cout<<"Ingrese un numero entre 1 y 5 segun desee: ";
+    cout<<"Ingrese un numero entre 1 y 4 segun desee: ";
     cin>>numero;
 
 
@@ -100,7 +105,9 @@ void opciones(){
         case 2:
             agregarTerminal(); break;
         case 3:
-            cout<<"Adios"; break;
+            quitarTerminal(); break;
+        case 4:
+            cout << "Adios!" << endl;
 
         default:
             cout<<"Opcion incorrecta";
